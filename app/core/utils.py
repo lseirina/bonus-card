@@ -22,6 +22,6 @@ def generate_cards(series, count, expiration_period):
     for _ in range(count):
         BonusCard.objects.create(
             series=series,
-            number=''.join(string.digits, k=16),
+            number=''.join(random.choices(string.digits, k=16)),
             expiration_date=expiration_date,
         )
