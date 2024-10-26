@@ -38,3 +38,15 @@ class GenerateCardsTest(TestCase):
                 expected_expiration_date,
                 delta=timedelta(seconds=1)
                 )
+
+    def test_generate_cards_unique_number(self):
+        """Test generate cards with unique number."""
+        series = 'UNIQUE'
+        count = 4
+        expiration_period = '6_months'
+
+        generate_cards(series, count, expiration_period)
+
+        numbers = BonusCard.objects.filter(series=series).values_list('number', flat=True)
+
+        self.assertEqual(len(numbers), len(set(numbers)))
