@@ -7,9 +7,9 @@ from rest_framework.routers import DefaultRouter
 from core.views import BonusCardViewSet
 
 router = DefaultRouter()
-router.register('cards', BonusCardViewSet)
+router.register('cards', BonusCardViewSet, basename='card')
 
-app_name = 'BonusCard'
+app_name = 'card'
 
 urlpatterns = [
     path('', include(router.urls))

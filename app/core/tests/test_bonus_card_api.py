@@ -38,3 +38,15 @@ def create_bonus_card(user, **params):
     bonus_card = BonusCard.objects.create(user=user, **defaults)
 
     return bonus_card
+
+
+class PublicBonusCardAPITests(TestCase):
+    """Tests unauthenticated API requests."""
+    def setUp(self):
+        self.client = APIClient()
+
+    def test_auth_required(self):
+        """Test authentication required for request."""
+        res = self.client.get(BONUS_CARDS_URL)
+
+        self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
