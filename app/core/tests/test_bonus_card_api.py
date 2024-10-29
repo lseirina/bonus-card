@@ -50,3 +50,27 @@ class PublicBonusCardAPITests(TestCase):
         res = self.client.get(BONUS_CARDS_URL)
 
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+class PrivateBonusCardAPITest(TestCase):
+    """Tests for authorized user."""
+    def setUp(self):
+        self.user = create_user(
+            username='TestName',
+            password='Test123',
+        )
+        self.client = APIClient()
+        self.client.force_authenticate(self.user)
+
+    def test_retrieve_list(self):
+        """Test retrieve list of bonus cards."""
+        create_bonus_card(user=self.user)
+        create_bonus_card(user=self.user)
+
+        res = self.client.get(BONUS_CARDS_URL)
+        cards = BonusCard.objects.all()
+        serializer = BonusCardSerializer(cards, many=True)
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.data, serializer.data)
+        

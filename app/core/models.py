@@ -1,7 +1,7 @@
 """Database models."""
 from django.db import models
 from django.utils import timezone
-
+from django.contrib.auth.models import User
 
 class BonusCard(models.Model):
     """BonusCard object."""
@@ -11,6 +11,7 @@ class BonusCard(models.Model):
         ('expired', 'Просрочена'),
     ]
 
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     series = models.CharField(max_length=10)
     number = models.CharField(max_length=16, unique=True)
     issue_date = models.DateTimeField(default=timezone.now)
