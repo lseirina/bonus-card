@@ -5,13 +5,13 @@ import random
 import string
 from datetime import timedelta
 
-from django.contrib.auth import get_user_model()
+from django.contrib.auth import get_user_model
 from django.utils import timezone
 
 from core.models import BonusCard
 
 
-def generate_cards(series, count, expiration_period):
+def generate_cards(user, series, count, expiration_period):
     expiration_map = {
         '1_year': timezone.now() + timedelta(days=365),
         '6_months': timezone.now() + timedelta(days=183),

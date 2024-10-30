@@ -10,7 +10,7 @@ from core.serializers import BonusCardSerializer
 class BonusCardViewSet(viewsets.ModelViewSet):
     """View for bonus cards."""
     queryset = BonusCard.objects.all()
-    serializer = BonusCardSerializer
+    serializer_class = BonusCardSerializer
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 

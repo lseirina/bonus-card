@@ -1,4 +1,5 @@
 """Tests for models."""
+from django.contrib.auth.models import User
 from django.utils import timezone
 from django.test import TestCase
 
@@ -7,12 +8,22 @@ from core.models import BonusCard
 from datetime import datetime
 
 
+def create_user(username='Testuser', password='Test123'):
+    """Create and return user."""
+    return User.objects.create_user(
+                username=username,
+                password=password,
+                )
+
+
 class ModelTests(TestCase):
     """Test models."""
 
     def test_create_bonus_card(self):
         """Test create bonus card object."""
+        user = create_user()
         bonus_card = BonusCard.objects.create(
+            user=user,
             series='sdfgh',
             number='123ghjk',
             issue_date=timezone.now(),
@@ -26,8 +37,9 @@ class ModelTests(TestCase):
 
     def test_check_expiration(self):
         """Test checking expiration date."""
-
+        user = create_user()
         bonus_card = BonusCard.objects.create(
+            user=user,
             series='sdfgh',
             number='123ghjk',
             issue_date=timezone.now(),
