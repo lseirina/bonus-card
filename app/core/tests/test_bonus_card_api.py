@@ -73,3 +73,17 @@ class PrivateBonusCardAPITest(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, serializer.data)
+
+    def test_retrieve_card_limit_to_user(self):
+        """Test retrieving cards are limited to authenticated user."""
+        other_user = create_user(username='OtherUser', password='Testpass123')
+
+        create_bonus_card(user=self.user)
+        create_bonus_card(user=other_user, number='gklk90')
+
+        card = BonusCard.objects.filter(user=self.user)
+        serializer = BonusCardSerializer(card, many=True)
+        res = self.client.get(BONUS_CARDS_URL)
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.data, serializer.data)
