@@ -85,5 +85,7 @@ class PrivateBonusCardAPITest(TestCase):
         serializer = BonusCardSerializer(card, many=True)
         res = self.client.get(BONUS_CARDS_URL)
 
+        print(res.data)
+        print(serializer.data)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, serializer.data)

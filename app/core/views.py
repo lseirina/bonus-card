@@ -18,3 +18,7 @@ class BonusCardViewSet(viewsets.ModelViewSet):
         """Check the expiration date when update."""
         instance = serializer.save()
         instance.check_expiration()
+
+    def get_queryset(self):
+        """Return bonus cards for the authenticated user only."""
+        return BonusCard.objects.filter(user=self.request.user)
