@@ -22,3 +22,5 @@ class BonusCardViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         """Return bonus cards for the authenticated user only."""
         return BonusCard.objects.filter(user=self.request.user)
+
+    

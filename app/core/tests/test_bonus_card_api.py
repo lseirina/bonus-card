@@ -85,7 +85,22 @@ class PrivateBonusCardAPITest(TestCase):
         serializer = BonusCardSerializer(card, many=True)
         res = self.client.get(BONUS_CARDS_URL)
 
-        print(res.data)
-        print(serializer.data)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, serializer.data)
+
+    def test_create_card(self):
+        """Test create card success."""
+        payload = {
+            'series': 'sdfgh',
+            'number': '123ghjk',
+            'issue_date': timezone.now(),
+            'expiration_date': datetime(2024, 12, 20, 12, 30),
+            'balance': 100.00,
+        }
+        res = self.client.post(BONUS_CARDS_URL, payload)
+
+        self.assertEqaul(res.status_code, status.HTTP_201_CREATED)
+        card = BonusCard.objects.get(id=res.data['id'])
+        for k, v in payload.items():
+            self.assertEqual(getattr(card, k), v)
+        self.assertEqual(res.user, self.user)
