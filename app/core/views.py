@@ -23,4 +23,6 @@ class BonusCardViewSet(viewsets.ModelViewSet):
         """Return bonus cards for the authenticated user only."""
         return BonusCard.objects.filter(user=self.request.user)
 
-    
+    def perform_create(self, serializer):
+        """Create a new user."""
+        return serializer.save(user=self.request.user)
