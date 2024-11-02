@@ -1,5 +1,6 @@
 """Tests for bomus card api."""
-from datetime import datetime
+from datetime import datetime, timedelta
+from decimal import Decimal
 
 from django.utils import timezone
 from django.test import TestCase
@@ -13,7 +14,6 @@ from core.models import BonusCard
 from core.serializers import BonusCardSerializer
 
 BONUS_CARDS_URL = reverse('card:card-list')
-
 
 def detail_bonus_card(bonus_card_id):
     return reverse('card:card-detail', args=[bonus_card_id])
@@ -30,8 +30,8 @@ def create_bonus_card(user, **params):
         'series': 'sdfgh',
         'number': '123ghjk',
         'issue_date': timezone.now(),
-        'expiration_date': datetime(2024, 12, 20, 12, 30),
-        'balance': 100.00,
+        'expiration_date': timezone.make_aware(datetime(2024, 12, 20, 12, 30)),
+        'balance': Decimal(100.00),
     }
     defaults.update(params)
 
@@ -94,13 +94,18 @@ class PrivateBonusCardAPITest(TestCase):
             'series': 'sdfgh',
             'number': '123ghjk',
             'issue_date': timezone.now(),
-            'expiration_date': datetime(2024, 12, 20, 12, 30),
-            'balance': 100.00,
+            'expiration_date': timezone.make_aware(datetime(2024, 12, 20, 12, 30)),
+            'balance': Decimal('100.00'),
         }
         res = self.client.post(BONUS_CARDS_URL, payload)
 
-        self.assertEqaul(res.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
         card = BonusCard.objects.get(id=res.data['id'])
         for k, v in payload.items():
-            self.assertEqual(getattr(card, k), v)
-        self.assertEqual(res.user, self.user)
+            if isinstance(v, datetime):
+                self.assertAlmostEqual(
+                    getattr(card, k), v, delta=timedelta(seconds=1)
+                    )
+            else:
+                self.assertEqual(getattr(card, k), v)
+        self.assertEqual(card.user, self.user)
