@@ -3,8 +3,22 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets
 
+from django.filters import rest_framework as filters
+
 from core.models import BonusCard
 from core.serializers import BonusCardSerializer
+
+
+class BonusCardFilter(filters.FilterSet):
+    """Filter class."""
+    issue_date = filters.DateFromToRangeFilter()
+    expiration_date = filters.DateFromToRangeFilter()
+
+    class Meta:
+        model = BonusCard
+        fields = [
+            'series', 'number', 'status', 'issue_date', 'expiration_date'
+            ]
 
 
 class BonusCardViewSet(viewsets.ModelViewSet):
