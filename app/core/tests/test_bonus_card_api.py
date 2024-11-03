@@ -149,7 +149,7 @@ class PrivateBonusCardAPITest(TestCase):
                 self.assertEqual(getattr(card, k), v)
         self.assertEqual(self.user, card.user)
 
-    def test_changing_user_returns_error(self):
+    def test_update_user_returns_error(self):
         """Test changing user results in error."""
         new_user = create_user(
             username='NewName',
@@ -163,3 +163,13 @@ class PrivateBonusCardAPITest(TestCase):
 
         card.refresh_from_db()
         self.assertEqual(self.user, card.user)
+
+    def test_delete_card(self):
+        """Test delete bonus card."""
+        card = create_bonus_card(user=self.user)
+        url = detail_bonus_card(card.id)
+
+        res = self.client.delete(url)
+
+        self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(BonusCard.objects.filter(user=self.user).exists())
