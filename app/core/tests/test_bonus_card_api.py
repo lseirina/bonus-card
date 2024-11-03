@@ -173,3 +173,15 @@ class PrivateBonusCardAPITest(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(BonusCard.objects.filter(user=self.user).exists())
+
+    def test_delete_card_of_other_user_error(self):
+        """Test deleting a card of other user returns error."""
+        new_user = create_user(username='NewUser', password="Testpass123")
+        card = create_bonus_card(user=new_user)
+
+        url = detail_bonus_card(card.id)
+
+        res = self.client.delete(url)
+
+        self.assertEqual(res.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertTrue(BonusCard.objects.filter(id=card.id))
