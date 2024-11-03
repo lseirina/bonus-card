@@ -148,3 +148,18 @@ class PrivateBonusCardAPITest(TestCase):
             else:
                 self.assertEqual(getattr(card, k), v)
         self.assertEqual(self.user, card.user)
+
+    def test_changing_user_returns_error(self):
+        """Test changing user results in error."""
+        new_user = create_user(
+            username='NewName',
+            password='Testpass123',
+        )
+        payload = {'user': new_user}
+        card = create_bonus_card(user=self.user)
+        url = detail_bonus_card(card.id)
+
+        self.client.patch(url, payload)
+
+        card.refresh_from_db()
+        self.assertEqual(self.user, card.user)
