@@ -109,3 +109,16 @@ class PrivateBonusCardAPITest(TestCase):
             else:
                 self.assertEqual(getattr(card, k), v)
         self.assertEqual(card.user, self.user)
+
+    def test_partial_update(self):
+        """Test partial update of the card."""
+        card = create_bonus_card(user=self.user)
+        url = detail_bonus_card(card.id)
+        payload = {'number': 'fghvb567'}
+
+        res = self.client.patch(url, payload)
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        card.refresh_from_db()
+        self.assertEqual(card.number, payload['number'])
+        self.assertEqual(self.user, card.user)

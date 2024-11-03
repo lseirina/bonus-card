@@ -10,5 +10,7 @@ class BonusCardSerializer(serializers.ModelSerializer):
     """Serializer fot bonus cards."""
     class Meta:
         model = BonusCard
-        fields = ['id', 'series', 'number', 'expiration_date', 'status', 'balance']
+        fields = [
+            'id', 'series', 'number', 'expiration_date', 'status', 'balance'
+            ]
         read_only_fields = ['id']
