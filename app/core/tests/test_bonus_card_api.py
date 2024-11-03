@@ -122,3 +122,29 @@ class PrivateBonusCardAPITest(TestCase):
         card.refresh_from_db()
         self.assertEqual(card.number, payload['number'])
         self.assertEqual(self.user, card.user)
+
+    def test_full_update(self):
+        """Test full updat of the card."""
+        payload = {
+            'series': 'scvbjj',
+            'number': '456789',
+            'issue_date': timezone.now(),
+            'expiration_date': timezone.make_aware(datetime(2025, 12, 20, 12, 30)),
+            'balance': Decimal(150.00),
+        }
+
+        card = create_bonus_card(user=self.user)
+        url = detail_bonus_card(card.id)
+
+        res = self.client.put(url, payload)
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        card.refresh_from_db()
+        for k, v in payload.items():
+            if isinstance(v, datetime):
+                self.assertAlmostEqual(
+                    getattr(card, k), v, delta=timedelta(seconds=1)
+                )
+            else:
+                self.assertEqual(getattr(card, k), v)
+        self.assertEqual(self.user, card.user)
