@@ -3,7 +3,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets
 
-from django.filters import rest_framework as filters
+from django_filters import rest_framework as filters
 
 from core.models import BonusCard
 from core.serializers import BonusCardSerializer
