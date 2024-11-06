@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets
 
 from django_filters import rest_framework as filters
+from django_filters.rest_framework import DjangoFilterBackend
 
 from core.models import BonusCard
 from core.serializers import BonusCardSerializer
@@ -27,6 +28,7 @@ class BonusCardViewSet(viewsets.ModelViewSet):
     serializer_class = BonusCardSerializer
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
     filterset_class = BonusCardFilter
 
     def perform_update(self, serializer):
