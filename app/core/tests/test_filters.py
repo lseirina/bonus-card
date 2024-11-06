@@ -34,7 +34,8 @@ class BonuscardFilterTest(TestCase):
             expiration_date=timezone.make_aware(
                 datetime(2024, 12, 20, 12, 30)
                 ),
-            balance=Decimal(100.00)
+            balance=Decimal(100.00),
+            status='expired'
         )
 
         self.cards2 = BonusCard.objects.create(
@@ -45,7 +46,8 @@ class BonuscardFilterTest(TestCase):
             expiration_date=timezone.make_aware(
                 datetime(2024, 12, 20, 12, 30)
                 ),
-            balance=Decimal(100.00)
+            balance=Decimal(100.00),
+            status='active',
         )
 
     def test_filter_series(self):
@@ -55,3 +57,11 @@ class BonuscardFilterTest(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(len(res.data), 1)
         self.assertEqual(res.data[0]['series'], 'sdfgh')
+
+    def test_filter_status(self):
+        """Test filtering bonus cards by status."""
+        res = self.client.get(URL_BONUS_CARD, {'status': 'active'})
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(res.data), 1)
+        self.assertEqual(res.data[0]['status'], 'active')
