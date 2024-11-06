@@ -24,9 +24,10 @@ class BonuscardFilterTest(TestCase):
             password='Testpass123',
         )
         self.client = APIClient()
-        self.client.force_authentication(self.user)
+        self.client.force_authenticate(self.user)
 
         self.cards1 = BonusCard.objects.create(
+            user=self.user,
             series='sdfgh',
             number='1237890',
             issue_date=timezone.now(),
@@ -37,6 +38,7 @@ class BonuscardFilterTest(TestCase):
         )
 
         self.cards2 = BonusCard.objects.create(
+            user=self.user,
             series='wertyui',
             number='1232345',
             issue_date=timezone.now(),
@@ -46,10 +48,10 @@ class BonuscardFilterTest(TestCase):
             balance=Decimal(100.00)
         )
 
-        def test_filter_series(self):
-            """Test filtering bonus card by series."""
-            res = self.client.get(URL_BONUS_CARD, {'series': 'sdfgh'})
+    def test_filter_series(self):
+        """Test filtering bonus card by series."""
+        res = self.client.get(URL_BONUS_CARD, {'series': 'sdfgh'})
 
-            self.assertEqual(res.status_code, status.HTTP_200_OK)
-            self.assertEqual(res.count(), 1)
-            self.assertequal(res.data[0]['series'], 'sdfgh')
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(res.data), 1)
+        self.assertEqual(res.data[0]['series'], 'sdfgh')

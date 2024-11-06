@@ -3,16 +3,16 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets
 
-import django_filters
+from django_filters import rest_framework as filters
 
 from core.models import BonusCard
 from core.serializers import BonusCardSerializer
 
 
-class BonusCardFilter(django_filters.FilterSet):
+class BonusCardFilter(filters.FilterSet):
     """Filter class."""
-    issue_date = django_filters.DateFromToRangeFilter()
-    expiration_date = django_filters.DateFromToRangeFilter()
+    issue_date = filters.DateFromToRangeFilter()
+    expiration_date = filters.DateFromToRangeFilter()
 
     class Meta:
         model = BonusCard
@@ -27,6 +27,7 @@ class BonusCardViewSet(viewsets.ModelViewSet):
     serializer_class = BonusCardSerializer
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
+    filterset_class = BonusCardFilter
 
     def perform_update(self, serializer):
         """Check the expiration date when update."""
