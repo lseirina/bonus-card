@@ -32,7 +32,7 @@ class BonuscardFilterTest(TestCase):
             number='1237890',
             issue_date=timezone.now() - timedelta(days=5),
             expiration_date=timezone.make_aware(
-                datetime(2024, 12, 20, 12, 30)
+                datetime(2024, 11, 5, 12, 30)
                 ),
             balance=Decimal(100.00),
             status='expired'
