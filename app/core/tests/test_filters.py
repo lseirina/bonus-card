@@ -65,3 +65,11 @@ class BonuscardFilterTest(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(len(res.data), 1)
         self.assertEqual(res.data[0]['status'], 'active')
+
+    def test_filter_number(self):
+        """Test filtering cards by number."""
+        res = self.client.get(URL_BONUS_CARD, {'number': '1232345'})
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(res.data), 1)
+        self.assertEqual(res.data[0]['number'], '1232345')
