@@ -30,7 +30,7 @@ class BonuscardFilterTest(TestCase):
             user=self.user,
             series='sdfgh',
             number='1237890',
-            issue_date=timezone.now(),
+            issue_date=timezone.now() - timedelta(days=5),
             expiration_date=timezone.make_aware(
                 datetime(2024, 12, 20, 12, 30)
                 ),
@@ -42,7 +42,7 @@ class BonuscardFilterTest(TestCase):
             user=self.user,
             series='wertyui',
             number='1232345',
-            issue_date=timezone.now(),
+            issue_date=timezone.now() - timedelta(days=30),
             expiration_date=timezone.make_aware(
                 datetime(2024, 12, 20, 12, 30)
                 ),
@@ -73,3 +73,16 @@ class BonuscardFilterTest(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(len(res.data), 1)
         self.assertEqual(res.data[0]['number'], '1232345')
+
+    def test_filter_issue_date(self):
+        """Test filtering cards by issue date."""
+        start_date = (timezone.now() - timedelta(days=10)).date()
+        end_date = timezone.now().date()
+
+        res = self.client.get(URL_BONUS_CARD, {
+            'issue_date_after': start_date, 'issue_date_before': end_date}
+                              )
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(res.data), 1)
+        self.assertEqual(res.data[0]['number'], '1237890')
