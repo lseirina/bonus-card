@@ -90,12 +90,15 @@ class BonuscardFilterTest(TestCase):
     def test_filter_expiration_date(self):
         """Test filtering cards by expiration date."""
         start_date = (timezone.now() - timedelta(days=365)).date()
-        end_date = timezone.now()
+        end_date = timezone.now().date()
 
         res = self.client.get(URL_BONUS_CARD, {
-            'issue_date_after': start_date, 'issue_date_before': end_date}
+            'expiration_date_after': start_date,
+            'expiration_date_before': end_date
+            }
                               )
 
+        print(res.data)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(len(res.data), 1)
         self.assertEqual(res.data[0]['number'], '1237890')
