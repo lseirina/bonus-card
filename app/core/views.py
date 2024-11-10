@@ -1,7 +1,7 @@
 """Views for Bonus card API."""
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-from rest_framework import viewsets
+from rest_framework import viewsets, generics
 
 from django_filters import rest_framework as filters
 from django_filters.rest_framework import DjangoFilterBackend
@@ -43,3 +43,11 @@ class BonusCardViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         """Create a new user."""
         serializer.save(user=self.request.user)
+
+
+class UserRegistrationView(generics.CreateAPIView):
+    """Create a new user in asystem."""
+    queryset = BonusCard.objects.all()
+    serializer_class = BonusCardSerializer
+
+    
