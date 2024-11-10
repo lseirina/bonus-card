@@ -6,7 +6,7 @@ from django.urls import (
 from rest_framework.routers import DefaultRouter
 from core.views import (
     BonusCardViewSet,
-    UserRegistrationView,
+    CreateTokenView,
     )
 
 router = DefaultRouter()
@@ -16,5 +16,5 @@ app_name = 'card'
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('register/', UserRegistrationView.as_view(), name='register')
+    path('token/', CreateTokenView.as_view(), name='token')
 ]
