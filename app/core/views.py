@@ -7,7 +7,15 @@ from django_filters import rest_framework as filters
 from django_filters.rest_framework import DjangoFilterBackend
 
 from core.models import BonusCard
-from core.serializers import BonusCardSerializer
+from core.serializers import (
+    BonusCardSerializer,
+    UserSerializer
+    )
+
+
+class CreateUserView(generics.CrrateAPIView):
+    """Create a new user in asystem."""
+    serializer_class = UserSerializer
 
 
 class BonusCardFilter(filters.FilterSet):
@@ -45,9 +53,3 @@ class BonusCardViewSet(viewsets.ModelViewSet):
         serializer.save(user=self.request.user)
 
 
-class UserRegistrationView(generics.CreateAPIView):
-    """Create a new user in asystem."""
-    queryset = BonusCard.objects.all()
-    serializer_class = BonusCardSerializer
-
-    

@@ -44,7 +44,7 @@ class AuthTokenSerializer(serializers.Serializer):
 
         attrs['user'] = user
         return attrs
-    
+
 
 class BonusCardSerializer(serializers.ModelSerializer):
     """Serializer for bonus cards."""
