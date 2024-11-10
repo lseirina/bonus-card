@@ -2,14 +2,14 @@
 Serializers for BonusCard API.
 """
 from rest_framework import serializers
-from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.models import authenticate
 
 from django.contrib.auth.models import User
 
 from core.models import BonusCard
 
 
-class UserSerializer(serializers.ModelSerialiser):
+class UserSerializer(serializers.ModelSerializer):
     """Serializer for user object."""
     class Meta:
         model = User
@@ -19,9 +19,32 @@ class UserSerializer(serializers.ModelSerialiser):
         def creat(self, validated_data):
             """Create and return user with token."""
             user = User.objects.create_user(**validated_data)
-            Token.objects.create(user=user)
             return user
 
+
+class AuthTokenSerializer(serializers.Serializer):
+    """Serializer for user authtoken."""
+    username = serializers.CharField()
+    password = serializers.CharField(
+        style={'input_type': 'password'}
+    )
+
+    def validate(self, attrs):
+        """Validate and authenticate the user."""
+        username = attrs.get('email')
+        password = attrs.get('password')
+        user = authenticate(
+            request=self.context.get('request'),
+            username=username,
+            password=password,
+        )
+        if not user:
+            msg = 'Unable to authenticate with provided credentials'
+            raise serializers.ValidationError(msg, code='authorization')
+
+        attrs['user'] = user
+        return attrs
+    
 
 class BonusCardSerializer(serializers.ModelSerializer):
     """Serializer for bonus cards."""
