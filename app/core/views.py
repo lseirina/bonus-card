@@ -2,6 +2,8 @@
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets, generics
+from rest_framework.authtoken.views import ObtainAuthToken
+fron rest_framework.settings import api_settings
 
 from django_filters import rest_framework as filters
 from django_filters.rest_framework import DjangoFilterBackend
@@ -9,13 +11,20 @@ from django_filters.rest_framework import DjangoFilterBackend
 from core.models import BonusCard
 from core.serializers import (
     BonusCardSerializer,
-    UserSerializer
+    UserSerializer,
+    AuthTokenSerializer,
     )
 
 
 class CreateUserView(generics.CrrateAPIView):
     """Create a new user in asystem."""
     serializer_class = UserSerializer
+
+
+class CreateTokenView(ObtainAuthToken):
+    """Create a new auth token for user."""
+    serializer_class = AuthTokenSerializer
+    renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
 
 
 class BonusCardFilter(filters.FilterSet):
@@ -51,5 +60,3 @@ class BonusCardViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         """Create a new user."""
         serializer.save(user=self.request.user)
-
-
