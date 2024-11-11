@@ -2,11 +2,11 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from django.urls import reverse
 
-from rest_framework import APIClient
-from rest_framework.test import status
+from rest_framework.test import APIClient
+from rest_framework import status
 
 
-TOKEN_URL = reverse('token')
+TOKEN_URL = reverse('card:token')
 
 
 class TokenAPITest(TestCase):
@@ -29,4 +29,7 @@ class TokenAPITest(TestCase):
             'username': user_details['username'],
             'password': user_details['password'],
         }
-        
+        res = self.client.post(TOKEN_URL, payload)
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertIn('token', res.data)

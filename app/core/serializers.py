@@ -31,7 +31,7 @@ class CustomAuthTokenSerializer(serializers.Serializer):
 
     def validate(self, attrs):
         """Validate and authenticate the user."""
-        username = attrs.get('email')
+        username = attrs.get('username')
         password = attrs.get('password')
         user = authenticate(
             request=self.context.get('request'),

@@ -31,6 +31,5 @@ urlpatterns = [
         'api/docs/', SpectacularSwaggerView.as_view(url_name='api-schema'),
         name='api-docs',
     ),
-    path('api-token-auth/', views.ObtainAuthToken.as_view()),
     path('api/card/', include('core.urls'))
 ]
