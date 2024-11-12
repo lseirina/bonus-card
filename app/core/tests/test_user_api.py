@@ -37,6 +37,14 @@ class TokenAPITest(TestCase):
     def test_create_token_bad_credentials(self):
         """Test return error if creadentials invalid."""
         payload = {'username': '', 'password': 'badpass'}
-        res =  self.client.post(TOKEN_URL, payload)
+        res = self.client.post(TOKEN_URL, payload)
+
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertNotIn('token', res.data)
+
+    def test_create_token_bland_password(self):
+        """Test create token with bland password return error."""
+        payload = {'username': 'Testname', 'password': ''}
+        res = self.client.post(TOKEN_URL, payload)
+
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
