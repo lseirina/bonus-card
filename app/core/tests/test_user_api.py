@@ -14,7 +14,7 @@ class TokenAPITest(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
             username='Testname',
-            password='test123'
+            password='testpass123'
         )
         self.client = APIClient()
 
